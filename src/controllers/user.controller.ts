@@ -42,3 +42,27 @@ export async function getUsersController(
     });
   }
 }
+
+// Importá getUserProfile del servicio al principio del archivo
+import { getUserProfile } from "../services/user.service";
+
+export async function getMeController(req: Request, res: Response) {
+  try {
+    // 1. Extraemos el ID que el middleware inyectó (el decoded del token)
+    const userId = (req as any).user.id;
+
+    // 2. Llamamos al servicio
+    const user = await getUserProfile(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // 3. Respondemos con los datos frescos de la DB
+    res.json(user);
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}

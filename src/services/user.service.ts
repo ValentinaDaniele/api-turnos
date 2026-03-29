@@ -23,3 +23,17 @@ export async function getUsers(): Promise<User[]> {
     },
   });
 }
+
+// Agregá esta función a tu user.service.ts
+export async function getUserProfile(userId: number) {
+  return prisma.user.findUnique({
+    where: { id: userId },
+    select: { 
+      id: true, 
+      name: true, 
+      email: true, 
+      createdAt: true 
+      // Password NO está aquí, por seguridad.
+    },
+  });
+}
